@@ -12,8 +12,10 @@ import java.util.Properties
  * To change this template use File | Settings | File Templates.
  */
 
-object Credentials {
-  val file = System.getProperty("user.home") + System.getProperty("file.separator") + ".aws" +
+object Credentials extends Credentials
+
+trait Credentials {
+  def file = System.getProperty("user.home") + System.getProperty("file.separator") + ".aws" +
     System.getProperty("file.separator") + "key.properties"
     val props = new Properties
     val in = new FileInputStream(file)
@@ -23,14 +25,15 @@ object Credentials {
     val accessKey = props.getProperty("access")
     val secretKey = props.getProperty("secret")
 
-    def credentials = new Credentials(accessKey, secretKey)
+    def credentials = new Creds(accessKey, secretKey)
 
   def apply() = credentials
 
 }
 
-case class Credentials(access: String, secret: String) extends AWSCredentials{
+case class Creds(access: String, secret: String) extends AWSCredentials{
   def getAWSAccessKeyId = access
 
   def getAWSSecretKey = secret
 }
+
